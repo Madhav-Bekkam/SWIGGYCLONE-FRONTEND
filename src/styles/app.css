@@ -1,0 +1,619 @@
+/* ================= SWIGGY GLOBAL VARIABLES ================= */
+:root {
+  --swiggy-orange: #fc8019;
+  --swiggy-green: #48c479;
+  --text-main: #282c3f;
+  --text-muted: #686b78;
+  --bg-main: #ffffff;
+  --bg-secondary: #f8f9fa;
+  --card-shadow: 0 15px 40px -20px rgba(40,44,63,0.15);
+  --border-color: #e9e9eb;
+}
+
+body.dark {
+  --text-main: #f5f5f5;
+  --text-muted: #a9abb5;
+  --bg-main: #0f0f1a;
+  --bg-secondary: #1a1a2e;
+  --card-shadow: 0 15px 40px -20px rgba(0,0,0,0.5);
+  --border-color: rgba(255,255,255,0.1);
+}
+
+body {
+  background: var(--bg-main);
+  color: var(--text-main);
+  font-family: 'Proxima Nova', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+  margin: 0;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+/* ================= ANIMATIONS & KEYFRAMES ================= */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-up {
+  animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes pulse {
+  0% { opacity: 0.5; }
+  50% { opacity: 1; transform: scale(1.05); }
+  100% { opacity: 0.5; }
+}
+
+/* ================= NAVBAR ================= */
+.swiggy-navbar {
+  position: sticky;
+  top: 0;
+  background: var(--bg-main);
+  box-shadow: 0 15px 40px -20px rgba(40,44,63,0.15);
+  z-index: 1000;
+  height: 80px;
+  display: flex;
+  align-items: center;
+}
+
+.nav-container {
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nav-brand h2 { color: var(--swiggy-orange); font-weight: 800; font-size: 24px; margin: 0; cursor: pointer; }
+.nav-actions { display: flex; align-items: center; gap: 40px; }
+.nav-link, .nav-cart { text-decoration: none; color: var(--text-main); font-weight: 600; font-size: 16px; display: flex; align-items: center; cursor: pointer; }
+.nav-link:hover, .nav-cart:hover { color: var(--swiggy-orange); }
+
+.theme-toggle { 
+  background: transparent; 
+  border: 1px solid var(--border-color); 
+  color: var(--text-main); 
+  padding: 8px 16px; 
+  border-radius: 20px; 
+  cursor: pointer; 
+  font-weight: bold;
+}
+
+/* ================= SCROLLING OFFER BANNER ================= */
+.scrolling-banner {
+  background: var(--swiggy-orange);
+  color: white;
+  padding: 12px 0;
+  overflow: hidden;
+  white-space: nowrap;
+  box-shadow: 0 4px 10px rgba(252, 128, 25, 0.2);
+}
+
+.marquee-content {
+  display: inline-block;
+  animation: scrollLeft 25s linear infinite;
+}
+
+.marquee-content span {
+  font-weight: 700;
+  font-size: 14px;
+  margin-right: 50px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+@keyframes scrollLeft {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* ================= HOME & HERO ================= */
+.home-wrapper { min-height: 100vh; }
+.swiggy-home { max-width: 1200px; margin: 0 auto; padding: 20px; }
+
+.premium-hero { text-align: center; padding: 40px 20px 60px; }
+.premium-hero h1 { font-size: 42px; color: var(--text-main); margin-bottom: 10px; font-weight: 800; }
+.animated-text { color: var(--swiggy-orange); display: inline-block; min-width: 250px; text-align: left; border-bottom: 4px solid var(--swiggy-green); padding-bottom: 5px; transition: all 0.3s ease; }
+.hero-subtext { font-size: 18px; color: var(--text-muted); font-weight: 500; }
+
+.section-header { margin-bottom: 30px; }
+.section-title { font-size: 24px; margin-bottom: 5px; color: var(--text-main); }
+.title-underline { width: 60px; height: 4px; background: var(--swiggy-orange); border: none; border-radius: 2px; margin: 0; }
+
+/* ================= CIRCULAR CATEGORY GRID (SWIGGY STYLE) ================= */
+.visual-category-grid { 
+  display: flex; 
+  gap: 35px; 
+  margin-bottom: 40px; 
+  overflow-x: auto; 
+  padding: 10px 0 20px 0;
+  scrollbar-width: none; /* Firefox */
+}
+.visual-category-grid::-webkit-scrollbar { 
+  display: none; /* Hide scrollbar for Chrome/Safari for cleaner look */
+}
+
+.visual-category-card {
+  background: transparent;
+  border-radius: 0; 
+  overflow: visible;
+  text-align: center;
+  cursor: pointer;
+  border: none; 
+  box-shadow: none; 
+  min-width: 120px;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  opacity: 0; 
+  animation: fadeUp 0.6s ease forwards;
+}
+
+.visual-category-card:hover {
+  transform: translateY(-8px);
+}
+
+.img-overlay-wrapper {
+  position: relative;
+  width: 120px; 
+  height: 120px; 
+  margin: 0 auto 15px auto; 
+  overflow: hidden;
+  border-radius: 50%; /* Perfect Circle */
+  box-shadow: 0 8px 20px rgba(0,0,0,0.1); 
+  border: 2px solid transparent;
+  transition: all 0.3s ease;
+}
+
+.visual-category-card:hover .img-overlay-wrapper {
+  border-color: var(--swiggy-orange);
+  box-shadow: 0 12px 25px rgba(252, 128, 25, 0.2);
+}
+
+.img-overlay-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.visual-category-card:hover .img-overlay-wrapper img {
+  transform: scale(1.1);
+}
+
+.visual-category-card h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+/* ================= RESTAURANT CHAINS BANNER ================= */
+.restaurant-chains-banner { display: flex; gap: 20px; overflow-x: auto; padding-bottom: 20px; margin-bottom: 60px; scrollbar-width: none; }
+.restaurant-chains-banner::-webkit-scrollbar { display: none; }
+
+.chain-logo {
+  min-width: 180px; height: 80px; background: var(--bg-main); border: 1px solid var(--border-color); border-radius: 12px;
+  display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 18px; color: var(--text-muted);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.02); transition: 0.3s ease; cursor: pointer;
+}
+.chain-logo:hover { transform: translateY(-5px); color: var(--swiggy-orange); border-color: var(--swiggy-orange); box-shadow: 0 10px 20px rgba(252, 128, 25, 0.1); }
+
+/* ================= CATEGORY VIEW & LOADING ================= */
+.category-header-sticky { position: sticky; top: 80px; background: var(--bg-main); padding: 20px 0; z-index: 10; border-bottom: 1px solid var(--border-color); margin-bottom: 30px; display: flex; align-items: center; gap: 20px; }
+.back-btn { background: transparent; border: 1px solid var(--border-color); padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: bold; color: var(--text-main); transition: 0.2s; }
+.back-btn:hover { background: var(--bg-secondary); }
+
+.loading-pulse { text-align: center; font-size: 20px; font-weight: bold; color: var(--swiggy-orange); padding: 60px; animation: pulse 1.5s infinite; }
+.empty-state { text-align: center; padding: 50px; background: var(--bg-secondary); border-radius: 12px; }
+.empty-state-icon { font-size: 64px; margin-bottom: 20px; animation: pulse 2s infinite; }
+
+/* ================= FOOD CARDS ================= */
+.food-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 30px; margin-top: 20px; }
+.staggered-food-card { opacity: 0; animation: fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+
+.swiggy-food-card { background: var(--bg-main); border-radius: 16px; overflow: hidden; transition: transform 0.1s ease-in-out, box-shadow 0.1s ease-in-out; border: 1px solid transparent; }
+.swiggy-food-card:hover { transform: scale(0.98); border-color: var(--border-color); box-shadow: var(--card-shadow); }
+
+.image-container { position: relative; width: 100%; height: 180px; border-radius: 16px 16px 0 0;  }
+.image-container img { width: 100%; height: 100%; object-fit: cover;border-radius: 16px 16px 0 0; }
+
+.add-btn-wrapper { position: absolute; bottom: -120px; left: 80%; transform: translateX(-50%); z-index: 20; }
+.swiggy-add-btn { background: white; color: var(--swiggy-green); border: 1px solid #d4d5d9; padding: 8px 30px; border-radius: 8px; font-weight: 800; font-size: 14px; box-shadow: 0 3px 8px rgba(0,0,0,0.1); cursor: pointer; text-transform: uppercase; }
+.swiggy-qty-controls { display: flex; align-items: center; background: white; border: 1px solid var(--swiggy-green); border-radius: 8px; overflow: hidden; box-shadow: 0 3px 8px rgba(0,0,0,0.1); }
+.swiggy-qty-controls button { background: white; border: none; color: var(--swiggy-green); padding: 8px 15px; font-weight: bold; cursor: pointer; }
+.swiggy-qty-controls span { padding: 8px 10px; color: var(--swiggy-green); font-weight: bold; }
+
+.food-info { padding: 25px 10px 10px 10px; }
+.food-info h3 { margin: 0 0 5px 0; font-size: 18px; color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* ================= CART & CHECKOUT ================= */
+.swiggy-cart-page { max-width: 800px; margin: 40px auto; padding: 20px; background: var(--bg-secondary); border-radius: 12px; }
+.cart-item-row { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px dashed var(--border-color); }
+.cart-footer { margin-top: 20px; display: flex; justify-content: space-between; align-items: center; }
+.swiggy-pay-btn { background: var(--swiggy-green); color: white; border: none; padding: 15px 30px; font-size: 16px; font-weight: 700; cursor: pointer; text-transform: uppercase; border-radius: 8px;}
+
+.bill-details-card { flex: 1; background: var(--bg-main); padding: 30px; border: 1px solid var(--border-color); }
+.bill-row { display: flex; justify-content: space-between; margin: 15px 0; color: var(--text-muted); font-size: 14px; }
+.final-total { font-weight: 800; color: var(--text-main); font-size: 16px; margin-top: 20px; border-top: 2px dashed var(--border-color); padding-top: 20px;}
+
+/* ================= AUTHENTICATION (LOGIN) ================= */
+.swiggy-auth-wrapper { display: flex; justify-content: center; align-items: center; min-height: 80vh; }
+.auth-card { background: var(--bg-main); padding: 40px; border-radius: 16px; border: 1px solid var(--border-color); width: 100%; max-width: 400px; box-shadow: var(--card-shadow); }
+.auth-header h2 { font-size: 30px; margin: 0 0 10px 0; color: var(--text-main); }
+.auth-header p { margin: 0; color: var(--text-muted); }
+.swiggy-input { width: 100%; padding: 15px; margin-bottom: 15px; border: 1px solid var(--border-color); border-radius: 8px; background: var(--bg-secondary); color: var(--text-main); font-size: 16px; outline: none; box-sizing: border-box; }
+.swiggy-input:focus { border-color: var(--swiggy-orange); }
+
+/* ================= ADMIN DASHBOARD ================= */
+.admin-layout { display: flex; min-height: calc(100vh - 80px); background: var(--bg-secondary); }
+.admin-sidebar { width: 250px; background: var(--bg-main); border-right: 1px solid var(--border-color); padding: 30px 20px; }
+.admin-sidebar h2 { color: var(--text-main); margin-top: 0; margin-bottom: 30px; font-size: 20px; }
+.admin-sidebar ul { list-style: none; padding: 0; margin: 0; }
+.admin-sidebar li { padding: 12px 15px; margin-bottom: 5px; border-radius: 8px; color: var(--text-muted); cursor: pointer; font-weight: 600; }
+.admin-sidebar li.active { background: rgba(252, 128, 25, 0.1); color: var(--swiggy-orange); }
+.admin-sidebar li:hover:not(.active) { background: var(--bg-secondary); }
+
+.admin-main { flex: 1; padding: 30px; overflow-y: auto; }
+.admin-title { margin-top: 0; color: var(--text-main); font-size: 28px; margin-bottom: 30px; }
+
+.metrics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px; }
+.metric-card { background: var(--bg-main); padding: 25px; border-radius: 12px; border: 1px solid var(--border-color); box-shadow: 0 4px 15px rgba(0,0,0,0.02); }
+.metric-card h3 { margin: 0 0 10px 0; color: var(--text-muted); font-size: 14px; text-transform: uppercase; letter-spacing: 1px; }
+.metric-value { margin: 0; font-size: 32px; font-weight: 800; color: var(--text-main); }
+.text-green { color: var(--swiggy-green); }
+
+.admin-content-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 30px; align-items: start; }
+.admin-card { background: var(--bg-main); border-radius: 12px; padding: 25px; border: 1px solid var(--border-color); box-shadow: 0 4px 15px rgba(0,0,0,0.02); }
+.admin-card h3 { margin-top: 0; margin-bottom: 20px; color: var(--text-main); font-size: 18px; border-bottom: 1px solid var(--border-color); padding-bottom: 15px; }
+
+.table-responsive { overflow-x: auto; }
+.admin-table { width: 100%; border-collapse: collapse; text-align: left; }
+.admin-table th { padding: 12px 15px; color: var(--text-muted); font-size: 12px; text-transform: uppercase; border-bottom: 2px solid var(--border-color); }
+.admin-table td { padding: 15px; border-bottom: 1px solid var(--border-color); color: var(--text-main); font-size: 14px; }
+.order-id { font-family: monospace; font-weight: bold; color: var(--text-muted); }
+.font-bold { font-weight: bold; }
+
+.status-badge { padding: 5px 10px; border-radius: 20px; font-size: 12px; font-weight: 700; text-transform: uppercase; }
+.status-badge.pending { background: #fff3cd; color: #856404; }
+.status-badge.delivered { background: #d4edda; color: #155724; }
+
+.form-group { margin-bottom: 20px; }
+.form-group label { display: block; margin-bottom: 8px; color: var(--text-muted); font-weight: 600; font-size: 14px; }
+
+
+/* ================= PREMIUM CHECKOUT LAYOUT ================= */
+.checkout-layout {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 30px;
+  max-width: 1200px;
+  align-items: start;
+}
+
+@media (max-width: 768px) {
+  .checkout-layout { grid-template-columns: 1fr; }
+}
+
+.checkout-section-box {
+  background: var(--bg-main);
+  padding: 30px;
+  border: 1px solid var(--border-color);
+  margin-bottom: 20px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+}
+
+.section-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.step-number {
+  background: var(--text-main);
+  color: var(--bg-main);
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+
+.active-step .step-number {
+  background: var(--swiggy-orange);
+  color: white;
+}
+
+.address-card {
+  padding: 20px;
+  border: 1px dashed var(--border-color);
+  background: var(--bg-secondary);
+}
+
+.address-card p {
+  margin: 5px 0;
+}
+
+/* Payment Selection Cards */
+.payment-options {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.payment-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+  padding: 20px;
+  border: 1px solid var(--border-color);
+  background: var(--bg-main);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.payment-card input[type="radio"] {
+  margin-top: 5px;
+  accent-color: var(--swiggy-orange);
+  transform: scale(1.2);
+}
+
+.payment-card.selected {
+  border-color: var(--swiggy-orange);
+  background: rgba(252, 128, 25, 0.03);
+  box-shadow: 0 4px 12px rgba(252, 128, 25, 0.1);
+}
+
+.payment-info h4 {
+  margin: 0 0 5px 0;
+  font-size: 16px;
+  color: var(--text-main);
+}
+
+.payment-info p {
+  margin: 0 0 10px 0;
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+.payment-icons {
+  display: flex;
+  gap: 10px;
+}
+
+.mock-icon {
+  font-size: 10px;
+  font-weight: 800;
+  padding: 3px 8px;
+  border: 1px solid var(--border-color);
+  background: white;
+  border-radius: 4px;
+  color: var(--text-muted);
+}
+
+.mini-cart-items {
+  margin-bottom: 20px;
+  background: var(--bg-secondary);
+  padding: 15px;
+}
+
+.mini-cart-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  font-size: 14px;
+  color: var(--text-main);
+}
+
+
+/* ================= ORDER HISTORY STYLES ================= */
+.order-history-card {
+  background: var(--bg-main);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+  transition: transform 0.2s ease;
+}
+
+.order-history-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.05);
+}
+
+.order-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.order-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px dashed var(--border-color);
+}
+
+/* Beautiful Status Pills */
+.status-pill {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Colors adapting to the actual text string */
+.status-pill.order-received, 
+.status-pill.cash-on-delivery, 
+.status-pill.online-paid { background: #e0f2fe; color: #0284c7; } /* Blue */
+
+.status-pill.preparing { background: #fef08a; color: #854d0e; } /* Yellow */
+
+.status-pill.out-for-delivery { background: #ffedd5; color: #c2410c; } /* Orange */
+
+.status-pill.delivered { background: #dcfce7; color: #166534; } /* Green */
+
+.status-pill.cancelled { background: #fee2e2; color: #b91c1c; } /* Red */
+
+
+
+/* ================= PASSWORD TOGGLE STYLES ================= */
+.password-wrapper {
+  position: relative;
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+/* Override the default margin and add padding so text doesn't type under the icon */
+.password-wrapper .swiggy-input {
+  position: relative;
+width:100%;
+  margin-bottom: 15px; 
+  padding-right: 45px; 
+}
+
+.password-toggle-btn {
+  position: absolute;
+  right: 15px;
+  top: 40%;
+  transform: translateY(-50%); /* Perfectly centers it vertically */
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  padding: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s;
+
+}
+
+.password-toggle-btn:hover {
+  transform: translateY(-50%) scale(1.1); /* Tiny pop effect on hover */
+}
+
+
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none; /* Hides scrollbar in Chrome/Safari */
+}
+.hide-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+
+
+
+
+/* ========================================================
+   📱 MOBILE RESPONSIVENESS (Screens smaller than 768px)
+======================================================== */
+@media (max-width: 768px) {
+  
+  /* 1. NAVBAR - Stack the brand and the links neatly */
+  .nav-container {
+    flex-direction: column;
+    gap: 15px;
+    padding: 15px !important;
+  }
+  .nav-actions {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+  }
+
+  /* 2. HOME PAGE - Make grids single column & fix hero text */
+  .premium-hero h1 {
+    fontSize: 32px !important;
+  }
+  .visual-category-grid, 
+  .food-grid {
+    grid-template-columns: 1fr 1fr !important; /* 2 items per row on mobile for categories/food */
+    gap: 15px;
+  }
+  .filter-bar {
+    flex-direction: column;
+    align-items: flex-start !important;
+  }
+  .filter-bar input[type="text"] {
+    width: 100% !important;
+  }
+
+  /* 3. ADMIN PANEL - Stack the sidebar on top of the main content */
+  .admin-layout {
+    flex-direction: column !important;
+    margin: 15px !important;
+  }
+  .admin-sidebar {
+    width: 100% !important;
+    border-right: none !important;
+    border-bottom: 1px solid var(--border-color);
+    padding: 20px !important;
+  }
+  .admin-sidebar ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .admin-sidebar li {
+    margin-bottom: 0 !important;
+    flex: 1;
+    text-align: center;
+  }
+  .admin-main {
+    padding: 20px !important;
+  }
+
+  /* 4. ADMIN GRIDS - Stack metrics and form side-by-sides */
+  .metrics-grid, 
+  .admin-content-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* 5. TABLES - Make tables scrollable sideways so they don't break the screen */
+  .table-responsive,
+  .admin-card > div[style*="overflowY"] {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch;
+  }
+  .admin-table {
+    min-width: 600px; /* Forces table to stay wide, allowing user to swipe sideways */
+  }
+
+  /* 6. FORMS & INPUTS - Full width for easier tapping */
+  .settings-form {
+    flex-direction: column;
+  }
+  .settings-form input, 
+  .settings-form select, 
+  .settings-form button {
+    width: 100% !important;
+  }
+  
+  /* 7. PROFILE & ORDERS - Adjust spacing */
+  .order-history-card {
+    padding: 15px !important;
+  }
+  .order-card-header {
+    flex-direction: column;
+    align-items: flex-start !important;
+    gap: 10px;
+  }
+}
+
+/* For very small phones (like iPhone SE) */
+@media (max-width: 480px) {
+  .visual-category-grid, 
+  .food-grid {
+    grid-template-columns: 1fr !important; /* 1 item per row on tiny screens */
+  }
+}
