@@ -4,7 +4,7 @@ import { AuthContext } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { io } from "socket.io-client"; 
 
-const socket = io("http://localhost:5000"); 
+const socket = io("https://swiggyclone-backend-4av6.onrender.com"); 
 
 export default function Profile() {
   const { user, setUser } = useContext(AuthContext); 
@@ -81,14 +81,14 @@ export default function Profile() {
 
   const fetchUserOrders = async () => {
     try {
-      const res = await axios.get(`http://localhost:5000/api/orders/user/${user.email}`);
+      const res = await axios.get(`https://swiggyclone-backend-4av6.onrender.com/api/orders/user/${user.email}`);
       setOrders(res.data);
     } catch (err) { console.error("Error fetching orders"); }
   };
 
   const fetchBusinessSettings = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/settings");
+      const res = await axios.get("https://swiggyclone-backend-4av6.onrender.com/api/settings");
       if (res.data) setBusinessInfo({
         contactNumber: res.data.contactNumber || "",
         supportEmail: res.data.supportEmail || "",
@@ -100,7 +100,7 @@ export default function Profile() {
   const handleUpdateBusiness = async (e) => {
     e.preventDefault();
     try {
-      await axios.put("http://localhost:5000/api/settings", businessInfo, config);
+      await axios.put("https://swiggyclone-backend-4av6.onrender.com/api/settings", businessInfo, config);
       setUpdateMsg("✅ Business details updated!");
       window.dispatchEvent(new Event("settingsUpdated"));
       setTimeout(() => setUpdateMsg(""), 3000);
@@ -110,7 +110,7 @@ export default function Profile() {
   const handleUpdateProfile = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.put("http://localhost:5000/api/users/profile", profileData, config);
+      const res = await axios.put("https://swiggyclone-backend-4av6.onrender.com/api/users/profile", profileData, config);
       alert("✅ Profile updated successfully!");
       
       localStorage.setItem("swiggyUser", JSON.stringify(res.data));
@@ -141,7 +141,7 @@ export default function Profile() {
     });
 
     try {
-      await axios.post(`http://localhost:5000/api/foods/${foodId}/reviews`, {
+      await axios.post(`https://swiggyclone-backend-4av6.onrender.com/api/foods/${foodId}/reviews`, {
         rating: rating,
         userName: user.name
       });

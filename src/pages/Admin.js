@@ -4,7 +4,7 @@ import { AuthContext } from "../context/AuthContext";
 import { io } from "socket.io-client"; 
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
-const socket = io("http://localhost:5000"); 
+const socket = io("https://swiggyclone-backend-4av6.onrender.com"); 
 
 export default function Admin() {
   const [activeTab, setActiveTab] = useState("dashboard");
@@ -67,13 +67,13 @@ export default function Admin() {
 
   const fetchDashboardData = async () => {
     try {
-      const ordersRes = await axios.get("http://localhost:5000/api/orders", config);
+      const ordersRes = await axios.get("https://swiggyclone-backend-4av6.onrender.com/api/orders", config);
       setOrders(ordersRes.data);
       
-      const promosRes = await axios.get("http://localhost:5000/api/promos", config);
+      const promosRes = await axios.get("https://swiggyclone-backend-4av6.onrender.com/api/promos", config);
       setPromos(promosRes.data);
       
-      const chartRes = await axios.get("http://localhost:5000/api/orders/analytics/revenue", config);
+      const chartRes = await axios.get("https://swiggyclone-backend-4av6.onrender.com/api/orders/analytics/revenue", config);
       setChartData(chartRes.data);
     } catch (err) {
       console.error("Error fetching dashboard data");
@@ -82,13 +82,13 @@ export default function Admin() {
 
   const fetchMenuItems = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/foods");
+      const res = await axios.get("https://swiggyclone-backend-4av6.onrender.com/api/foods");
       setMenuItems(res.data);
     } catch (err) { console.error("Error fetching menu"); }
   };
 
   const updateSettings = async () => {
-    await axios.put("http://localhost:5000/api/settings", settings, config);
+    await axios.put("https://swiggyclone-backend-4av6.onrender.com/api/settings", settings, config);
     alert("✅ Store Settings Updated!");
   };
 
@@ -100,11 +100,11 @@ export default function Admin() {
 
     try {
       if (isEditMode) {
-        await axios.put(`http://localhost:5000/api/foods/${editFoodId}`, newFood, freshConfig);
+        await axios.put(`https://swiggyclone-backend-4av6.onrender.com/api/foods/${editFoodId}`, newFood, freshConfig);
         alert("📝 Food item updated successfully!");
         cancelEdit();
       } else {
-        await axios.post("http://localhost:5000/api/foods", newFood, freshConfig);
+        await axios.post("https://swiggyclone-backend-4av6.onrender.com/api/foods", newFood, freshConfig);
         alert("🍔 Food item added to menu!");
         setNewFood({ name: "", price: "", category: "Biryani", image: "", isVeg: true });
       }
@@ -138,7 +138,7 @@ export default function Admin() {
   const handleDeleteFood = async (id) => {
     if (window.confirm("Are you sure you want to delete this dish?")) {
       try {
-        await axios.delete(`http://localhost:5000/api/foods/${id}`, config);
+        await axios.delete(`https://swiggyclone-backend-4av6.onrender.com/api/foods/${id}`, config);
         fetchMenuItems();
       } catch (err) { alert("Error deleting food"); }
     }
@@ -146,7 +146,7 @@ export default function Admin() {
 
   const handleUpdateOrderStatus = async (orderId, newStatus) => {
     try {
-      await axios.put(`http://localhost:5000/api/orders/${orderId}/status`, { status: newStatus }, config);
+      await axios.put(`https://swiggyclone-backend-4av6.onrender.com/api/orders/${orderId}/status`, { status: newStatus }, config);
       setOrders(orders.map(order => 
         order._id === orderId ? { ...order, status: newStatus } : order
       ));
@@ -157,7 +157,7 @@ export default function Admin() {
 
   const handleTogglePromo = async (id) => {
     try {
-      const res = await axios.put(`http://localhost:5000/api/promos/${id}/toggle`, {}, config);
+      const res = await axios.put(`https://swiggyclone-backend-4av6.onrender.com/api/promos/${id}/toggle`, {}, config);
       setPromos(promos.map(p => p._id === id ? { ...p, isActive: res.data.isActive } : p));
     } catch (err) {
       alert("Error toggling promo code");
@@ -167,7 +167,7 @@ export default function Admin() {
   const handleDeletePromo = async (id) => {
     if (window.confirm("Are you sure you want to delete this promo code? This cannot be undone.")) {
       try {
-        await axios.delete(`http://localhost:5000/api/promos/${id}`, config);
+        await axios.delete(`https://swiggyclone-backend-4av6.onrender.com/api/promos/${id}`, config);
         setPromos(promos.filter(p => p._id !== id));
       } catch (err) {
         alert("Error deleting promo code");
@@ -178,7 +178,7 @@ export default function Admin() {
   const handleCreatePromo = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("http://localhost:5000/api/promos", newPromoCode, config);
+      const res = await axios.post("https://swiggyclone-backend-4av6.onrender.com/api/promos", newPromoCode, config);
       setPromos([res.data, ...promos]);
       setNewPromoCode({ code: '', discountType: 'FLAT', discountValue: '', minOrderAmount: '' });
       alert("Promo code created successfully!");

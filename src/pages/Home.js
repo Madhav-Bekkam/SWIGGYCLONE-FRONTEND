@@ -3,7 +3,7 @@ import axios from "axios";
 import { io } from "socket.io-client"; 
 import FoodCard from "../components/FoodCard";
 
-const socket = io("http://localhost:5000");
+const socket = io("https://swiggyclone-backend-4av6.onrender.com");
 
 // 🎨 Array of gradients to cycle through for dynamic promo cards
 const promoGradients = [
@@ -44,7 +44,7 @@ export default function Home() {
     // 🚀 NEW: Fetch Active Promos on Load
     const fetchActivePromos = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/promos/active");
+        const res = await axios.get("https://swiggyclone-backend-4av6.onrender.com/api/promos/active");
         setActivePromos(res.data);
       } catch (err) {
         console.error("Error fetching promos", err);
@@ -74,7 +74,7 @@ export default function Home() {
     setSelectedCategory(cat);
     window.scrollTo({ top: 0, behavior: 'smooth' });
     try {
-      const res = await axios.get(`http://localhost:5000/api/foods/${cat}`);
+      const res = await axios.get(`https://swiggyclone-backend-4av6.onrender.com/api/foods/${cat}`);
       setFoods(res.data);
     } catch (err) {
       console.log("Error fetching foods", err);

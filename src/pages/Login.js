@@ -19,7 +19,7 @@ const [showPassword, setShowPassword] = useState(false);
     try {
       if (isLogin) {
         // LOGIN logic
-        const res = await axios.post("http://localhost:5000/api/login", { email, password });
+        const res = await axios.post("https://swiggyclone-backend-4av6.onrender.com/api/login", { email, password });
         login(res.data);
         
         // Route based on role
@@ -30,7 +30,7 @@ const [showPassword, setShowPassword] = useState(false);
         }
       } else {
         // REGISTER logic
-        const res = await axios.post("http://localhost:5000/api/register", { name, email, password });
+        const res = await axios.post("https://swiggyclone-backend-4av6.onrender.com/api/register", { name, email, password });
         alert(res.data.message);
         setIsLogin(true); // Switch back to login view after successful registration
       }

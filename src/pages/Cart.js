@@ -35,7 +35,7 @@ export default function Cart() {
     if (!promoCode) return;
     
     try {
-      const res = await axios.post("http://localhost:5000/api/promo/validate", {
+      const res = await axios.post("https://swiggyclone-backend-4av6.onrender.com/api/promo/validate", {
         code: promoCode,
         cartTotal: itemTotal
       });
