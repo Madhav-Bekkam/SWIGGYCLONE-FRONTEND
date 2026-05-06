@@ -224,7 +224,7 @@ export default function Home() {
                   }}
                   style={{ accentColor: '#db7c38', transform: 'scale(1.3)', cursor: 'pointer' }}
                 />
-                Pure Non-Veg Only <span style={{ color: '#db7c38' }}>🟥</span>
+                Non-Veg Only <span style={{ color: '#db7c38' }}>🟥</span>
               </label>
             </div>
 

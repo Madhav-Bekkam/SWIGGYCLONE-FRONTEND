@@ -324,6 +324,8 @@ export default function Admin() {
                       <tr>
                         <th style={{ padding: '10px', textAlign: 'left' }}>ID</th>
                         <th style={{ padding: '10px', textAlign: 'left' }}>Date</th>
+                        {/* 🚀 Render Customer Name Column Header Here */}
+                        <th style={{ padding: '10px', textAlign: 'left' }}>Customer</th>
                         <th style={{ padding: '10px', textAlign: 'left' }}>Items (Qty)</th>
                         <th style={{ padding: '10px', textAlign: 'left' }}>Amount</th>
                         <th style={{ padding: '10px', textAlign: 'left' }}>Status</th>
@@ -338,6 +340,11 @@ export default function Admin() {
                             {new Date(o.createdAt).toLocaleString(undefined, { 
                               month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' 
                             })}
+                          </td>
+
+                          {/* 🚀 Render Customer Name Only Here */}
+                          <td style={{ padding: '10px', fontSize: '14px', color: 'var(--text-main)', fontWeight: 'bold' }}>
+                            {o.customer?.name || "Customer"}
                           </td>
 
                           <td style={{ padding: '10px', fontSize: '13px', color: 'var(--text-main)' }}>
