@@ -1,6 +1,21 @@
 import React, { useContext } from "react";
 import { CartContext } from "../context/CartContext";
 
+// Dynamic preparation time helper function
+const getPrepTime = (category) => {
+  const cat = category?.toLowerCase() || '';
+  
+  if (cat.includes('beverage') || cat.includes('tea') || cat.includes('drinks') || cat.includes('juice') || cat.includes('ice cream')) {
+    return '5-10 MINS';
+  } else if (cat.includes('tiffin') || cat.includes('fast food') || cat.includes('snacks') || cat.includes('burger')) {
+    return '15-20 MINS';
+  } else if (cat.includes('biryani') || cat.includes('pizza') || cat.includes('meals') || cat.includes('main course')) {
+    return '35-45 MINS';
+  } else {
+    return '25-30 MINS'; 
+  }
+};
+
 export default function FoodCard({ food }) {
   const { cart, addToCart, increaseQty, decreaseQty } = useContext(CartContext);
   const item = cart.find(i => i._id === food._id);
@@ -42,7 +57,7 @@ export default function FoodCard({ food }) {
   </span>
 
   <span>• {food.numReviews} {food.numReviews === 1 ? 'Rating' : 'Ratings'}</span>
-  <span>• 30-40 MINS</span>
+  <span>• {getPrepTime(food.category)}</span>
   
 </div>
     </div>

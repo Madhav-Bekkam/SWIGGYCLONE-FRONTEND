@@ -21,6 +21,7 @@ export default function Home() {
   // 🧠 State for Advanced Filters & Promos
   const [searchTerm, setSearchTerm] = useState("");
   const [isVegOnly, setIsVegOnly] = useState(false);
+  const [isNonVegOnly, setIsNonVegOnly] = useState(false); // Added Non-Veg state
   const [activePromos, setActivePromos] = useState([]); // 🚀 NEW: State for Promos
   
   // Dynamic Hero Text Animation
@@ -87,13 +88,18 @@ export default function Home() {
     setFoods([]);
     setSearchTerm(""); 
     setIsVegOnly(false); 
+    setIsNonVegOnly(false); // Reset non-veg state
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const filteredFoods = foods.filter(food => {
     const matchesSearch = food.name.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesVeg = isVegOnly ? food.isVeg === true : true;
-    return matchesSearch && matchesVeg;
+    
+    // Updated filter logic for both Veg and Non-Veg
+    if (isVegOnly && food.isVeg === false) return false;
+    if (isNonVegOnly && food.isVeg === true) return false;
+    
+    return matchesSearch;
   });
 
   return (
@@ -198,10 +204,27 @@ export default function Home() {
                 <input 
                   type="checkbox" 
                   checked={isVegOnly}
-                  onChange={(e) => setIsVegOnly(e.target.checked)}
+                  onChange={(e) => {
+                    setIsVegOnly(e.target.checked);
+                    if (e.target.checked) setIsNonVegOnly(false); // Automatically uncheck non-veg
+                  }}
                   style={{ accentColor: 'var(--swiggy-green)', transform: 'scale(1.3)', cursor: 'pointer' }}
                 />
                 Pure Veg Only <span style={{ color: 'var(--swiggy-green)' }}>🟩</span>
+              </label>
+
+              {/* NEW: Pure Non-Veg Checkbox */}
+              <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontWeight: 'bold', fontSize: '15px', color: 'var(--text-main)' }}>
+                <input 
+                  type="checkbox" 
+                  checked={isNonVegOnly}
+                  onChange={(e) => {
+                    setIsNonVegOnly(e.target.checked);
+                    if (e.target.checked) setIsVegOnly(false); // Automatically uncheck veg
+                  }}
+                  style={{ accentColor: '#db7c38', transform: 'scale(1.3)', cursor: 'pointer' }}
+                />
+                Pure Non-Veg Only <span style={{ color: '#db7c38' }}>🟥</span>
               </label>
             </div>
 
@@ -222,8 +245,8 @@ export default function Home() {
               <div className="empty-state">
                 <div className="empty-state-icon">🍽️</div>
                 <h2>Nothing found!</h2>
-                <p>Try adjusting your search or turning off the Veg filter.</p>
-                <button className="swiggy-pay-btn" onClick={() => { setSearchTerm(""); setIsVegOnly(false); }}>Clear Filters</button>
+                <p>Try adjusting your search or modifying your filters.</p>
+                <button className="swiggy-pay-btn" onClick={() => { setSearchTerm(""); setIsVegOnly(false); setIsNonVegOnly(false); }}>Clear Filters</button>
               </div>
             )}
           </div>
