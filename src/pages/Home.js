@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { io } from "socket.io-client";
 import FoodCard from "../components/FoodCard";
-import Hero3D from "../components/Hero3D";
+import HeroPremium from "../components/HeroPremium";
 import Statistics from "../components/Statistics";
 import { motion } from "framer-motion";
 
@@ -116,7 +116,7 @@ export default function Home() {
 
       {!selectedCategory && (
         <div style={{ position: 'relative', width: '100%', height: '80vh', overflow: 'hidden', display: 'flex', alignItems: 'center', background: 'var(--bg-main)' }}>
-          <Hero3D />
+          <HeroPremium />
           
 
         </div>
