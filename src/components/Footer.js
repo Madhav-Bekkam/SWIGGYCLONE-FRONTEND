@@ -17,7 +17,7 @@ export default function Footer() {
   const fetchSettings = async () => {
     try {
       // Added a timestamp to prevent the browser from showing old cached data
-      const res = await axios.get(`https://swiggyclone-backend-4av6.onrender.com/api/settings?t=${Date.now()}`);
+      const res = await axios.get(`https://swiggyclone-backend-1.onrender.com/api/settings?t=${Date.now()}`);
       if (res.data) {
         setStoreData({
           contactNumber: res.data.contactNumber || "+91 9898989898",

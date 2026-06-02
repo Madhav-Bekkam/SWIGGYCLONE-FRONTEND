@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useRef } from "react";
 import { CartContext } from "../context/CartContext";
 
 // Dynamic preparation time helper function
@@ -19,10 +19,34 @@ const getPrepTime = (category) => {
 export default function FoodCard({ food }) {
   const { cart, addToCart, increaseQty, decreaseQty } = useContext(CartContext);
   const item = cart.find(i => i._id === food._id);
+  const cardRef = useRef(null);
+
+  const handleMouseMove = (e) => {
+    if (!cardRef.current) return;
+    const rect = cardRef.current.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+    const rotateX = ((y - centerY) / centerY) * -15; 
+    const rotateY = ((x - centerX) / centerX) * 15;
+    cardRef.current.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.05, 1.05, 1.05)`;
+  };
+
+  const handleMouseLeave = () => {
+    if (!cardRef.current) return;
+    cardRef.current.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
+  };
 
   return (
-    <div className="swiggy-food-card">
-      <div className="image-container">
+    <div 
+      className="swiggy-food-card card-3d-wrapper" 
+      ref={cardRef} 
+      onMouseMove={handleMouseMove} 
+      onMouseLeave={handleMouseLeave}
+      style={{ transition: 'transform 0.1s ease-out' }}
+    >
+      <div className="image-container layer-3d-deep">
         <img src={food.image} alt={food.name} />
         <div className="add-btn-wrapper">
           {!item ? (
@@ -36,7 +60,7 @@ export default function FoodCard({ food }) {
           )}
         </div>
       </div>
-      <div className="food-info">
+      <div className="food-info layer-3d">
         <h3>{food.name}</h3>
         
         <p style={{ fontWeight: "bold" }}>₹{food.price}</p>

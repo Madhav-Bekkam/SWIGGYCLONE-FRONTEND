@@ -50,7 +50,7 @@ export default function Checkout() {
 
     try {
       // 1. Create order on our backend using the PROPER final amount
-      const result = await axios.post("https://swiggyclone-backend-4av6.onrender.com/api/payment/create", { amount: final });
+      const result = await axios.post("https://swiggyclone-backend-1.onrender.com/api/payment/create", { amount: final });
       const { amount, id: order_id, currency } = result.data;
 
       // 2. Open Razorpay Checkout Modal
@@ -70,7 +70,7 @@ export default function Checkout() {
             razorpay_signature: response.razorpay_signature,
           };
 
-          const verifyRes = await axios.post("https://swiggyclone-backend-4av6.onrender.com/api/payment/verify", verifyData);
+          const verifyRes = await axios.post("https://swiggyclone-backend-1.onrender.com/api/payment/verify", verifyData);
           if (verifyRes.data.message === "Payment verified successfully") {
             saveOrderToDatabase("Online Paid");
           }
@@ -94,7 +94,7 @@ export default function Checkout() {
   };
 
   const saveOrderToDatabase = async (statusMsg) => {
-    await axios.post("https://swiggyclone-backend-4av6.onrender.com/api/orders", {
+    await axios.post("https://swiggyclone-backend-1.onrender.com/api/orders", {
       items: cart,
       totalAmount: cartTotal,
       discount: discount, // 👈 Ensures the backend saves the promo discount!

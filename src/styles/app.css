@@ -617,3 +617,53 @@ width:100%;
     grid-template-columns: 1fr !important; /* 1 item per row on tiny screens */
   }
 }
+
+/* ================= 3D ANIMATED STUNNING UI ================= */
+.perspective-container {
+  perspective: 1500px;
+}
+
+.card-3d-wrapper {
+  transform-style: preserve-3d;
+  transition: transform 0.1s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.3s ease;
+}
+
+.layer-3d {
+  transform: translateZ(30px);
+  transition: transform 0.3s ease;
+  will-change: transform;
+}
+
+.layer-3d-deep {
+  transform: translateZ(60px);
+  transition: transform 0.3s ease;
+  will-change: transform;
+}
+
+/* Enhancing category cards */
+.visual-category-card {
+  transform-style: preserve-3d;
+}
+
+.visual-category-card:hover .img-overlay-wrapper {
+  transform: translateZ(40px) scale(1.1);
+  box-shadow: 0 20px 40px rgba(252, 128, 25, 0.4);
+}
+.visual-category-card:hover h3 {
+  transform: translateZ(20px);
+}
+
+/* Hero Section 3D */
+.hero-3d-container {
+  perspective: 2000px;
+  transform-style: preserve-3d;
+}
+
+.hero-3d-text {
+  transition: transform 0.1s ease-out;
+  will-change: transform;
+}
+
+.hero-3d-subtext {
+  transform: translateZ(40px);
+}

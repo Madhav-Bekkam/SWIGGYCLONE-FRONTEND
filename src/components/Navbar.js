@@ -5,7 +5,7 @@ import { CartContext } from "../context/CartContext";
 import { AuthContext } from "../context/AuthContext";
 import { io } from "socket.io-client"; // 🚀 ADDED: Socket import
 
-const socket = io("https://swiggyclone-backend-4av6.onrender.com"); // 🚀 ADDED: Socket connection
+const socket = io("https://swiggyclone-backend-1.onrender.com"); // 🚀 ADDED: Socket connection
 
 export default function Navbar() {
   const { theme, toggleTheme } = useContext(ThemeContext);

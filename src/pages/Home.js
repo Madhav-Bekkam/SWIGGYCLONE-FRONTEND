@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { io } from "socket.io-client"; 
 import FoodCard from "../components/FoodCard";
 
-const socket = io("https://swiggyclone-backend-4av6.onrender.com");
+const socket = io("https://swiggyclone-backend-1.onrender.com");
 
 // 🎨 Array of gradients to cycle through for dynamic promo cards
 const promoGradients = [
@@ -35,6 +35,20 @@ export default function Home() {
     return () => clearInterval(interval);
   }, [phrases.length]);
 
+  // 3D Hero Mouse Interaction
+  const heroRef = useRef(null);
+  const handleHeroMouseMove = (e) => {
+    if (!heroRef.current) return;
+    const { left, top, width, height } = heroRef.current.getBoundingClientRect();
+    const x = (e.clientX - left - width / 2) / 20;
+    const y = (e.clientY - top - height / 2) / 20;
+    heroRef.current.style.transform = `rotateY(${x}deg) rotateX(${-y}deg)`;
+  };
+  const handleHeroMouseLeave = () => {
+    if (!heroRef.current) return;
+    heroRef.current.style.transform = `rotateY(0deg) rotateX(0deg)`;
+  };
+
   // 🔌 Real-Time Order Tracking & Promos Fetch
   useEffect(() => {
     socket.on("orderStatusChanged", (updatedOrder) => {
@@ -45,7 +59,7 @@ export default function Home() {
     // 🚀 NEW: Fetch Active Promos on Load
     const fetchActivePromos = async () => {
       try {
-        const res = await axios.get("https://swiggyclone-backend-4av6.onrender.com/api/promos/active");
+        const res = await axios.get("https://swiggyclone-backend-1.onrender.com/api/promos/active");
         setActivePromos(res.data);
       } catch (err) {
         console.error("Error fetching promos", err);
@@ -75,7 +89,7 @@ export default function Home() {
     setSelectedCategory(cat);
     window.scrollTo({ top: 0, behavior: 'smooth' });
     try {
-      const res = await axios.get(`https://swiggyclone-backend-4av6.onrender.com/api/foods/${cat}`);
+      const res = await axios.get(`https://swiggyclone-backend-1.onrender.com/api/foods/${cat}`);
       setFoods(res.data);
     } catch (err) {
       console.log("Error fetching foods", err);
@@ -119,9 +133,15 @@ export default function Home() {
       <div className="swiggy-home">
         {!selectedCategory ? (
           <>
-            <div className="premium-hero animate-fade-up">
-              <h1>Craving <span className="animated-text">{phrases[phraseIndex]}</span></h1>
-              <p className="hero-subtext">Tap. Order. Eat. Repeat.</p>
+            <div 
+              className="premium-hero animate-fade-up hero-3d-container"
+              onMouseMove={handleHeroMouseMove}
+              onMouseLeave={handleHeroMouseLeave}
+            >
+              <div className="hero-3d-text" ref={heroRef}>
+                <h1 className="layer-3d">Craving <span className="animated-text">{phrases[phraseIndex]}</span></h1>
+                <p className="hero-subtext layer-3d-deep">Tap. Order. Eat. Repeat.</p>
+              </div>
             </div>
 
             <div className="section-header animate-fade-up" style={{ animationDelay: '0.2s' }}>
@@ -129,11 +149,11 @@ export default function Home() {
               <hr className="title-underline" />
             </div>
 
-            <div className="visual-category-grid">
+            <div className="visual-category-grid perspective-container">
               {categories.map((cat, index) => (
                 <div 
                   key={cat.name} 
-                  className="visual-category-card" 
+                  className="visual-category-card card-3d-wrapper" 
                   onClick={() => fetchFoods(cat.name)}
                   style={{ animationDelay: `${index * 0.05}s` }}
                 >

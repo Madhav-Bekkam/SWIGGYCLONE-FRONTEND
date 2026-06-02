@@ -4,7 +4,7 @@ import { AuthContext } from "../context/AuthContext";
 import { io } from "socket.io-client";
 import { useNavigate } from "react-router-dom";
 
-const socket = io("https://swiggyclone-backend-4av6.onrender.com");
+const socket = io("https://swiggyclone-backend-1.onrender.com");
 
 export default function Orders() {
   const { user } = useContext(AuthContext);
@@ -38,7 +38,7 @@ export default function Orders() {
 
   const fetchMyOrders = async () => {
     try {
-      const res = await axios.get(`https://swiggyclone-backend-4av6.onrender.com/api/orders/user/${user.email}`);
+      const res = await axios.get(`https://swiggyclone-backend-1.onrender.com/api/orders/user/${user.email}`);
       setMyOrders(res.data);
     } catch (err) {
       console.error("Error fetching orders");
@@ -49,7 +49,7 @@ export default function Orders() {
   const handleCancelOrder = async (orderId) => {
     if (window.confirm("Are you sure you want to cancel this order?")) {
       try {
-        await axios.put(`https://swiggyclone-backend-4av6.onrender.com/api/orders/${orderId}/cancel`);
+        await axios.put(`https://swiggyclone-backend-1.onrender.com/api/orders/${orderId}/cancel`);
         alert("✅ Order cancelled successfully. Refund will be initiated if paid online.");
         fetchMyOrders(); 
       } catch (err) {
@@ -63,7 +63,7 @@ export default function Orders() {
     if (userRatings[foodId]) return; // Prevent double rating
 
     try {
-      await axios.post(`https://swiggyclone-backend-4av6.onrender.com/api/foods/${foodId}/reviews`, {
+      await axios.post(`https://swiggyclone-backend-1.onrender.com/api/foods/${foodId}/reviews`, {
         rating: rating,
         userName: user.name
       });
