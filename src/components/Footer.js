@@ -4,16 +4,6 @@ import axios from "axios";
 import { motion } from "framer-motion";
 import { MapPin, Phone, Mail } from "lucide-react";
 
-const Instagram = ({size}) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
-);
-const Twitter = ({size}) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path></svg>
-);
-const Facebook = ({size}) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
-);
-
 export default function Footer() {
   const [storeData, setStoreData] = useState({
     contactNumber: "+91 98765 43210",
@@ -42,15 +32,7 @@ export default function Footer() {
     fetchSettings();
     window.addEventListener("settingsUpdated", fetchSettings);
     return () => window.removeEventListener("settingsUpdated", fetchSettings);
-  }, [location]);
-
-  const socialLinks = [
-    { icon: <Instagram size={20} />, color: "#E1306C", delay: 0.1 },
-    { icon: <Twitter size={20} />, color: "#1DA1F2", delay: 0.2 },
-    { icon: <Facebook size={20} />, color: "#4267B2", delay: 0.3 }
-  ];
-
-  return (
+  }, [location]);  return (
     <footer style={{ 
       background: 'var(--bg-main)', 
       position: 'relative',
@@ -79,27 +61,6 @@ export default function Footer() {
           <p style={{ color: 'var(--text-muted)', fontSize: '15px', lineHeight: '1.6', marginBottom: '20px' }}>
             Bringing the best flavors of Hyderabad right to your doorstep. Lightning fast delivery, every time.
           </p>
-          <div style={{ display: 'flex', gap: '15px' }}>
-            {socialLinks.map((social, index) => (
-              <motion.a 
-                key={index}
-                href="#"
-                initial={{ scale: 0, opacity: 0 }}
-                whileInView={{ scale: 1, opacity: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: social.delay, type: "spring" }}
-                whileHover={{ scale: 1.2, backgroundColor: social.color, color: "#fff", boxShadow: `0 0 15px ${social.color}` }}
-                style={{ 
-                  display: 'flex', alignItems: 'center', justifyContent: 'center', 
-                  width: '40px', height: '40px', borderRadius: '50%', 
-                  background: 'var(--bg-secondary)', color: 'var(--text-main)',
-                  transition: 'background 0.3s'
-                }}
-              >
-                {social.icon}
-              </motion.a>
-            ))}
-          </div>
         </motion.div>
 
         {/* Quick Links */}
@@ -156,7 +117,7 @@ export default function Footer() {
         }}
       >
         <p style={{ color: 'var(--text-muted)', fontSize: '14px', fontWeight: '500' }}>
-          © {new Date().getFullYear()} Mad Food Zone. Designed with <span style={{ color: '#ff3b3b' }}>❤️</span> using Framer Motion & Three.js.
+          © {new Date().getFullYear()} Mad Food Zone. Made with ❤️ in Hyderabad.
         </p>
       </motion.div>
     </footer>

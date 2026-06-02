@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { io } from "socket.io-client"; 
+import { io } from "socket.io-client";
 import FoodCard from "../components/FoodCard";
 import Hero3D from "../components/Hero3D";
-import ChefSpecial from "../components/ChefSpecial";
 import Statistics from "../components/Statistics";
-import Testimonials from "../components/Testimonials";
 import { motion } from "framer-motion";
 
 const socket = io("https://swiggyclone-backend-1.onrender.com");
@@ -120,40 +118,7 @@ export default function Home() {
         <div style={{ position: 'relative', width: '100%', height: '80vh', overflow: 'hidden', display: 'flex', alignItems: 'center', background: 'var(--bg-main)' }}>
           <Hero3D />
           
-          <div style={{ position: 'relative', zIndex: 10, maxWidth: '1200px', margin: '0 auto', padding: '0 20px', width: '100%', display: 'flex', justifyContent: 'flex-start' }}>
-            <motion.div 
-              initial={{ opacity: 0, x: -50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8, ease: "easeOut" }}
-              className="glass-panel"
-              style={{ padding: '40px', borderRadius: '24px', maxWidth: '550px', backdropFilter: 'blur(20px)' }}
-            >
-              <h1 style={{ fontSize: '48px', fontWeight: 800, margin: '0 0 10px 0', lineHeight: 1.1 }}>
-                Discover Extraordinary <br/> <span style={{ color: 'var(--swiggy-orange)' }}>Food Experiences</span>
-              </h1>
-              <p style={{ fontSize: '20px', color: 'var(--text-muted)', marginBottom: '30px' }}>
-                Fresh, Delicious, Delivered Fast.
-              </p>
-              
-              <div style={{ display: 'flex', gap: '15px' }}>
-                <motion.button 
-                  className="btn-glow"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  style={{ background: 'var(--swiggy-orange)', color: '#fff', border: 'none', padding: '15px 30px', fontSize: '16px', fontWeight: 'bold', borderRadius: '12px', cursor: 'pointer', boxShadow: '0 10px 20px rgba(252, 128, 25, 0.3)' }}
-                >
-                  Order Now
-                </motion.button>
-                <motion.button 
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  style={{ background: 'transparent', color: 'var(--text-main)', border: '2px solid var(--border-color)', padding: '15px 30px', fontSize: '16px', fontWeight: 'bold', borderRadius: '12px', cursor: 'pointer' }}
-                >
-                  Explore Menu
-                </motion.button>
-              </div>
-            </motion.div>
-          </div>
+
         </div>
       )}
 
@@ -333,9 +298,7 @@ export default function Home() {
       {/* 🌟 NEW PREMIUM SECTIONS 🌟 */}
       {!selectedCategory && (
         <>
-          <ChefSpecial />
           <Statistics />
-          <Testimonials />
         </>
       )}
 
