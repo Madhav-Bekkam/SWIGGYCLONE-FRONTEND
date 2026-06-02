@@ -1,11 +1,15 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { io } from "socket.io-client"; 
 import FoodCard from "../components/FoodCard";
+import Hero3D from "../components/Hero3D";
+import ChefSpecial from "../components/ChefSpecial";
+import Statistics from "../components/Statistics";
+import Testimonials from "../components/Testimonials";
+import { motion } from "framer-motion";
 
 const socket = io("https://swiggyclone-backend-1.onrender.com");
 
-// 🎨 Array of gradients to cycle through for dynamic promo cards
 const promoGradients = [
   "linear-gradient(135deg, #ff7e5f, #feb47b)",
   "linear-gradient(135deg, #43e97b, #38f9d7)",
@@ -13,50 +17,36 @@ const promoGradients = [
   "linear-gradient(135deg, #ff0844, #ffb199)"
 ];
 
+// Stagger variants for framer motion
+const containerVariants = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: { staggerChildren: 0.1 }
+  }
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 30 },
+  show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 24 } }
+};
+
 export default function Home() {
   const [foods, setFoods] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
   const [loading, setLoading] = useState(false);
   
-  // 🧠 State for Advanced Filters & Promos
   const [searchTerm, setSearchTerm] = useState("");
   const [isVegOnly, setIsVegOnly] = useState(false);
-  const [isNonVegOnly, setIsNonVegOnly] = useState(false); // Added Non-Veg state
-  const [activePromos, setActivePromos] = useState([]); // 🚀 NEW: State for Promos
+  const [isNonVegOnly, setIsNonVegOnly] = useState(false);
+  const [activePromos, setActivePromos] = useState([]);
   
-  // Dynamic Hero Text Animation
-  const [phraseIndex, setPhraseIndex] = useState(0);
-  const phrases = ["Biryani?", "a juicy Burger?", "hot Pizza?", "crispy Dosa?", "Ice Cream?", "a cold Drink?"];
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setPhraseIndex((prev) => (prev + 1) % phrases.length);
-    }, 2500);
-    return () => clearInterval(interval);
-  }, [phrases.length]);
-
-  // 3D Hero Mouse Interaction
-  const heroRef = useRef(null);
-  const handleHeroMouseMove = (e) => {
-    if (!heroRef.current) return;
-    const { left, top, width, height } = heroRef.current.getBoundingClientRect();
-    const x = (e.clientX - left - width / 2) / 20;
-    const y = (e.clientY - top - height / 2) / 20;
-    heroRef.current.style.transform = `rotateY(${x}deg) rotateX(${-y}deg)`;
-  };
-  const handleHeroMouseLeave = () => {
-    if (!heroRef.current) return;
-    heroRef.current.style.transform = `rotateY(0deg) rotateX(0deg)`;
-  };
-
-  // 🔌 Real-Time Order Tracking & Promos Fetch
   useEffect(() => {
     socket.on("orderStatusChanged", (updatedOrder) => {
       const orderId = updatedOrder._id.substring(updatedOrder._id.length - 6);
       alert(`🔔 Live Update! Order #${orderId} status changed to: ${updatedOrder.status}`);
     });
 
-    // 🚀 NEW: Fetch Active Promos on Load
     const fetchActivePromos = async () => {
       try {
         const res = await axios.get("https://swiggyclone-backend-1.onrender.com/api/promos/active");
@@ -102,23 +92,19 @@ export default function Home() {
     setFoods([]);
     setSearchTerm(""); 
     setIsVegOnly(false); 
-    setIsNonVegOnly(false); // Reset non-veg state
+    setIsNonVegOnly(false); 
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const filteredFoods = foods.filter(food => {
     const matchesSearch = food.name.toLowerCase().includes(searchTerm.toLowerCase());
-    
-    // Updated filter logic for both Veg and Non-Veg
     if (isVegOnly && food.isVeg === false) return false;
     if (isNonVegOnly && food.isVeg === true) return false;
-    
     return matchesSearch;
   });
 
   return (
     <div className="home-wrapper">
-      
       <div className="scrolling-banner">
         <div className="marquee-content">
           <span>🔥 MEGA SAVINGS: Get 50% OFF up to ₹100 on your first order!</span>
@@ -130,62 +116,108 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="swiggy-home">
+      {!selectedCategory && (
+        <div style={{ position: 'relative', width: '100%', height: '80vh', overflow: 'hidden', display: 'flex', alignItems: 'center', background: 'var(--bg-main)' }}>
+          <Hero3D />
+          
+          <div style={{ position: 'relative', zIndex: 10, maxWidth: '1200px', margin: '0 auto', padding: '0 20px', width: '100%', display: 'flex', justifyContent: 'flex-start' }}>
+            <motion.div 
+              initial={{ opacity: 0, x: -50 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
+              className="glass-panel"
+              style={{ padding: '40px', borderRadius: '24px', maxWidth: '550px', backdropFilter: 'blur(20px)' }}
+            >
+              <h1 style={{ fontSize: '48px', fontWeight: 800, margin: '0 0 10px 0', lineHeight: 1.1 }}>
+                Discover Extraordinary <br/> <span style={{ color: 'var(--swiggy-orange)' }}>Food Experiences</span>
+              </h1>
+              <p style={{ fontSize: '20px', color: 'var(--text-muted)', marginBottom: '30px' }}>
+                Fresh, Delicious, Delivered Fast.
+              </p>
+              
+              <div style={{ display: 'flex', gap: '15px' }}>
+                <motion.button 
+                  className="btn-glow"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  style={{ background: 'var(--swiggy-orange)', color: '#fff', border: 'none', padding: '15px 30px', fontSize: '16px', fontWeight: 'bold', borderRadius: '12px', cursor: 'pointer', boxShadow: '0 10px 20px rgba(252, 128, 25, 0.3)' }}
+                >
+                  Order Now
+                </motion.button>
+                <motion.button 
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  style={{ background: 'transparent', color: 'var(--text-main)', border: '2px solid var(--border-color)', padding: '15px 30px', fontSize: '16px', fontWeight: 'bold', borderRadius: '12px', cursor: 'pointer' }}
+                >
+                  Explore Menu
+                </motion.button>
+              </div>
+            </motion.div>
+          </div>
+        </div>
+      )}
+
+      <div className="swiggy-home" style={{ position: 'relative', zIndex: 20 }}>
         {!selectedCategory ? (
           <>
-            <div 
-              className="premium-hero animate-fade-up hero-3d-container"
-              onMouseMove={handleHeroMouseMove}
-              onMouseLeave={handleHeroMouseLeave}
+            <motion.div 
+              className="section-header" 
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-100px" }}
+              style={{ marginTop: '40px' }}
             >
-              <div className="hero-3d-text" ref={heroRef}>
-                <h1 className="layer-3d">Craving <span className="animated-text">{phrases[phraseIndex]}</span></h1>
-                <p className="hero-subtext layer-3d-deep">Tap. Order. Eat. Repeat.</p>
-              </div>
-            </div>
-
-            <div className="section-header animate-fade-up" style={{ animationDelay: '0.2s' }}>
               <h2 className="section-title">What's on your mind?</h2>
               <hr className="title-underline" />
-            </div>
+            </motion.div>
 
-            <div className="visual-category-grid perspective-container">
+            <motion.div 
+              className="visual-category-grid perspective-container"
+              variants={containerVariants}
+              initial="hidden"
+              whileInView="show"
+              viewport={{ once: true, margin: "-100px" }}
+            >
               {categories.map((cat, index) => (
-                <div 
+                <motion.div 
                   key={cat.name} 
-                  className="visual-category-card card-3d-wrapper" 
+                  variants={itemVariants}
+                  whileHover={{ scale: 1.1, rotateY: 10, rotateX: 10, y: -10 }}
+                  className="visual-category-card" 
                   onClick={() => fetchFoods(cat.name)}
-                  style={{ animationDelay: `${index * 0.05}s` }}
+                  style={{ transformStyle: 'preserve-3d', cursor: 'pointer' }}
                 >
-                  <div className="img-overlay-wrapper">
+                  <div className="img-overlay-wrapper" style={{ transform: 'translateZ(30px)' }}>
                     <img src={cat.image} alt={cat.name} />
-                    <div className="overlay-gradient"></div>
                   </div>
-                  <h3>{cat.name}</h3>
-                </div>
+                  <h3 style={{ transform: 'translateZ(20px)' }}>{cat.name}</h3>
+                </motion.div>
               ))}
-            </div>
+            </motion.div>
 
-            {/* 🚀 DYNAMIC: Only renders if there are active promos in the DB */}
             {activePromos.length > 0 && (
-              <>
-                <div className="section-header animate-fade-up" style={{ animationDelay: '0.6s', marginTop: '60px' }}>
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true, margin: "-100px" }}
+              >
+                <div className="section-header" style={{ marginTop: '60px' }}>
                   <h2 className="section-title">Today's Special Offers</h2>
                   <hr className="title-underline" />
                 </div>
                 
-                <div className="offers-banner animate-fade-up hide-scrollbar" style={{ 
-                  animationDelay: '0.8s', display: 'flex', gap: '20px', overflowX: 'auto', paddingBottom: '20px', paddingTop: '10px'
-                }}>
+                <div className="offers-banner hide-scrollbar" style={{ display: 'flex', gap: '20px', overflowX: 'auto', paddingBottom: '20px', paddingTop: '10px' }}>
                    {activePromos.map((promo, index) => (
-                     <div key={promo._id} style={{ 
-                       flex: '0 0 auto', 
-                       minWidth: '280px', 
-                       // Uses modulo to cycle through the beautiful gradients endlessly
-                       background: promoGradients[index % promoGradients.length], 
-                       borderRadius: '12px', padding: '20px', color: '#fff', 
-                       boxShadow: '0 4px 10px rgba(0,0,0,0.1)', position: 'relative', overflow: 'hidden' 
-                     }}>
+                     <motion.div 
+                       key={promo._id} 
+                       whileHover={{ scale: 1.05, y: -5 }}
+                       style={{ 
+                         flex: '0 0 auto', 
+                         minWidth: '280px', 
+                         background: promoGradients[index % promoGradients.length], 
+                         borderRadius: '12px', padding: '20px', color: '#fff', 
+                         boxShadow: '0 10px 25px rgba(0,0,0,0.1)', position: 'relative', overflow: 'hidden' 
+                       }}>
                        <h3 style={{ margin: '0 0 10px 0', fontSize: '22px', fontWeight: '800', color: '#fff' }}>
                          {promo.discountType === 'FLAT' ? `Flat ₹${promo.discountValue} OFF` : `${promo.discountValue}% OFF`}
                        </h3>
@@ -195,27 +227,37 @@ export default function Home() {
                        <div style={{ background: 'rgba(255,255,255,0.2)', padding: '8px 15px', borderRadius: '8px', display: 'inline-block', border: '1px dashed #fff', fontWeight: 'bold', letterSpacing: '2px', color: '#fff' }}>
                          {promo.code}
                        </div>
-                     </div>
+                     </motion.div>
                    ))}
                 </div>
-              </>
+              </motion.div>
             )}
           </>
         ) : (
-          <div className="category-view-container animate-fade-up">
-            <div className="category-header-sticky">
-              <button className="back-btn" onClick={resetView}>
+          <motion.div 
+            className="category-view-container"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <div className="category-header-sticky glass-panel" style={{ borderRadius: '0 0 20px 20px', padding: '20px', margin: '-20px -20px 30px -20px' }}>
+              <motion.button 
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="back-btn" 
+                onClick={resetView}
+              >
                 <span className="back-arrow">←</span> Back to all categories
-              </button>
-              <h2 className="section-title">Explore Best {selectedCategory}s</h2>
+              </motion.button>
+              <h2 className="section-title" style={{ margin: 0, marginLeft: '20px' }}>Explore Best {selectedCategory}s</h2>
             </div>
 
-            <div className="filter-bar" style={{ display: 'flex', flexWrap: 'wrap', gap: '20px', marginBottom: '30px', alignItems: 'center', background: 'var(--bg-secondary)', padding: '15px', borderRadius: '12px' }}>
+            <div className="filter-bar glass-panel" style={{ display: 'flex', flexWrap: 'wrap', gap: '20px', marginBottom: '30px', alignItems: 'center', padding: '15px', borderRadius: '12px' }}>
               <input 
                 type="text" 
                 placeholder={`Search in ${selectedCategory}...`} 
                 className="swiggy-input"
-                style={{ flex: 1, minWidth: '250px', marginBottom: 0, border: 'none', background: 'var(--bg-main)' }}
+                style={{ flex: 1, minWidth: '250px', marginBottom: 0, border: 'none', background: 'var(--bg-secondary)', borderRadius: '8px' }}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
@@ -226,21 +268,20 @@ export default function Home() {
                   checked={isVegOnly}
                   onChange={(e) => {
                     setIsVegOnly(e.target.checked);
-                    if (e.target.checked) setIsNonVegOnly(false); // Automatically uncheck non-veg
+                    if (e.target.checked) setIsNonVegOnly(false);
                   }}
                   style={{ accentColor: 'var(--swiggy-green)', transform: 'scale(1.3)', cursor: 'pointer' }}
                 />
                 Pure Veg Only <span style={{ color: 'var(--swiggy-green)' }}>🟩</span>
               </label>
 
-              {/* NEW: Pure Non-Veg Checkbox */}
               <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontWeight: 'bold', fontSize: '15px', color: 'var(--text-main)' }}>
                 <input 
                   type="checkbox" 
                   checked={isNonVegOnly}
                   onChange={(e) => {
                     setIsNonVegOnly(e.target.checked);
-                    if (e.target.checked) setIsVegOnly(false); // Automatically uncheck veg
+                    if (e.target.checked) setIsVegOnly(false);
                   }}
                   style={{ accentColor: '#db7c38', transform: 'scale(1.3)', cursor: 'pointer' }}
                 />
@@ -254,24 +295,50 @@ export default function Home() {
                 <p>Cooking up results...</p>
               </div>
             ) : filteredFoods.length > 0 ? (
-              <div className="food-grid">
+              <motion.div 
+                className="food-grid"
+                variants={containerVariants}
+                initial="hidden"
+                animate="show"
+              >
                 {filteredFoods.map((food, index) => (
-                  <div key={food._id} className="staggered-food-card" style={{ animationDelay: `${index * 0.1}s` }}>
+                  <motion.div key={food._id} variants={itemVariants}>
                     <FoodCard food={food} />
-                  </div>
+                  </motion.div>
                 ))}
-              </div>
+              </motion.div>
             ) : (
-              <div className="empty-state">
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="empty-state glass-panel"
+              >
                 <div className="empty-state-icon">🍽️</div>
                 <h2>Nothing found!</h2>
                 <p>Try adjusting your search or modifying your filters.</p>
-                <button className="swiggy-pay-btn" onClick={() => { setSearchTerm(""); setIsVegOnly(false); setIsNonVegOnly(false); }}>Clear Filters</button>
-              </div>
+                <motion.button 
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="swiggy-pay-btn" 
+                  onClick={() => { setSearchTerm(""); setIsVegOnly(false); setIsNonVegOnly(false); }}
+                >
+                  Clear Filters
+                </motion.button>
+              </motion.div>
             )}
-          </div>
+          </motion.div>
         )}
       </div>
+
+      {/* 🌟 NEW PREMIUM SECTIONS 🌟 */}
+      {!selectedCategory && (
+        <>
+          <ChefSpecial />
+          <Statistics />
+          <Testimonials />
+        </>
+      )}
+
     </div>
   );
 }

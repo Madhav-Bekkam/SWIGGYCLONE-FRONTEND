@@ -1,5 +1,6 @@
-import React, { useContext, useRef } from "react";
+import React, { useContext } from "react";
 import { CartContext } from "../context/CartContext";
+import { motion, useMotionValue, useTransform } from "framer-motion";
 
 // Dynamic preparation time helper function
 const getPrepTime = (category) => {
@@ -19,71 +20,90 @@ const getPrepTime = (category) => {
 export default function FoodCard({ food }) {
   const { cart, addToCart, increaseQty, decreaseQty } = useContext(CartContext);
   const item = cart.find(i => i._id === food._id);
-  const cardRef = useRef(null);
 
-  const handleMouseMove = (e) => {
-    if (!cardRef.current) return;
-    const rect = cardRef.current.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    const centerX = rect.width / 2;
-    const centerY = rect.height / 2;
-    const rotateX = ((y - centerY) / centerY) * -15; 
-    const rotateY = ((x - centerX) / centerX) * 15;
-    cardRef.current.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.05, 1.05, 1.05)`;
-  };
+  // Framer Motion 3D Tilt Logic
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
 
-  const handleMouseLeave = () => {
-    if (!cardRef.current) return;
-    cardRef.current.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
-  };
+  const rotateX = useTransform(y, [-100, 100], [15, -15]);
+  const rotateY = useTransform(x, [-100, 100], [-15, 15]);
+
+  function handleMouse(event) {
+    const rect = event.currentTarget.getBoundingClientRect();
+    x.set(event.clientX - rect.left - rect.width / 2);
+    y.set(event.clientY - rect.top - rect.height / 2);
+  }
+
+  function handleMouseLeave() {
+    x.set(0);
+    y.set(0);
+  }
 
   return (
-    <div 
-      className="swiggy-food-card card-3d-wrapper" 
-      ref={cardRef} 
-      onMouseMove={handleMouseMove} 
+    <motion.div 
+      className="swiggy-food-card glass-panel deep-shadow" 
+      onMouseMove={handleMouse} 
       onMouseLeave={handleMouseLeave}
-      style={{ transition: 'transform 0.1s ease-out' }}
+      style={{ 
+        perspective: 1000,
+        rotateX, 
+        rotateY,
+        transformStyle: "preserve-3d",
+        background: "var(--bg-main)",
+        borderRadius: "16px",
+        overflow: "hidden"
+      }}
+      whileHover={{ scale: 1.05 }}
+      transition={{ type: "spring", stiffness: 300, damping: 20 }}
     >
-      <div className="image-container layer-3d-deep">
+      <motion.div className="image-container" style={{ transform: "translateZ(50px)" }}>
         <img src={food.image} alt={food.name} />
         <div className="add-btn-wrapper">
           {!item ? (
-            <button className="swiggy-add-btn" onClick={() => addToCart(food)}>ADD</button>
+            <motion.button 
+              className="swiggy-add-btn btn-glow" 
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+              onClick={() => addToCart(food)}
+            >
+              ADD
+            </motion.button>
           ) : (
-            <div className="swiggy-qty-controls">
+            <motion.div className="swiggy-qty-controls" whileHover={{ scale: 1.05 }}>
               <button onClick={() => decreaseQty(food._id)}>-</button>
               <span>{item.quantity}</span>
               <button onClick={() => increaseQty(food._id)}>+</button>
-            </div>
+            </motion.div>
           )}
         </div>
-      </div>
-      <div className="food-info layer-3d">
-        <h3>{food.name}</h3>
+      </motion.div>
+      <motion.div className="food-info" style={{ transform: "translateZ(30px)", padding: "25px 10px 10px 10px" }}>
+        <h3 style={{ margin: "0 0 5px 0", fontSize: "18px", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+          {food.name}
+        </h3>
         
-        <p style={{ fontWeight: "bold" }}>₹{food.price}</p>
-      </div>
+        <p style={{ fontWeight: "bold", textShadow: "0 0 10px rgba(252,128,25,0.4)", color: "var(--swiggy-orange)" }}>
+          ₹{food.price}
+        </p>
 
-<div className="food-rating" style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '14px', fontWeight: 'bold', color: 'var(--text-muted)', marginTop: '8px' }}>
-  
-  <span style={{ 
-    background: food.rating >= 4 ? 'var(--swiggy-green)' : food.rating > 0 ? '#db7c38' : '#e9e9eb', 
-    color: food.rating > 0 ? 'white' : 'black', 
-    padding: '2px 6px', 
-    borderRadius: '4px',
-    display: 'flex',
-    alignItems: 'center',
-    gap: '3px'
-  }}>
-    ⭐ {food.rating > 0 ? food.rating.toFixed(1) : "NEW"}
-  </span>
+        <div className="food-rating" style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '12px', fontWeight: 'bold', color: 'var(--text-muted)', marginTop: '8px' }}>
+          <span style={{ 
+            background: food.rating >= 4 ? 'var(--swiggy-green)' : food.rating > 0 ? '#db7c38' : '#e9e9eb', 
+            color: food.rating > 0 ? 'white' : 'black', 
+            padding: '2px 6px', 
+            borderRadius: '4px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '3px',
+            boxShadow: '0 2px 5px rgba(0,0,0,0.1)'
+          }}>
+            ⭐ {food.rating > 0 ? food.rating.toFixed(1) : "NEW"}
+          </span>
 
-  <span>• {food.numReviews} {food.numReviews === 1 ? 'Rating' : 'Ratings'}</span>
-  <span>• {getPrepTime(food.category)}</span>
-  
-</div>
-    </div>
+          <span>• {food.numReviews} {food.numReviews === 1 ? 'Rating' : 'Ratings'}</span>
+          <span>• {getPrepTime(food.category)}</span>
+        </div>
+      </motion.div>
+    </motion.div>
   );
 }
